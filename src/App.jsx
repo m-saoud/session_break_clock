@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import "./App.css";
 
@@ -8,6 +8,8 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(`${sessionLength}:00`);
   const [isRunning, setIsRunning] = useState(false);
   const [timerLabel, setTimerLabel] = useState("Session");
+  const beepRef = useRef(null);
+
 
   useEffect(() => {
     let timerInterval;
@@ -36,8 +38,11 @@ function App() {
             setTimerLabel("Session");
             setTimeLeft(`${sessionLength}:00`);
           }
+          beepRef.current.play();
+
         }
       }, 1000);
+
     } else {
       clearInterval(timerInterval);
     }
@@ -46,7 +51,7 @@ function App() {
       clearInterval(timerInterval);
     };
   }, [isRunning, timeLeft, breakLength, sessionLength, timerLabel]);
-  
+
   const startStopTimer = () => {
     setIsRunning(!isRunning);
   };
@@ -56,14 +61,15 @@ function App() {
     setSessionLength(25);
     setTimeLeft(`${sessionLength}:00`);
     setIsRunning(false);
-
+    beepRef.current.pause();
+    beepRef.current.currentTime = 0;
   };
   const decrement = (type) => {
     if (type === "break" && breakLength > 1) {
       setBreakLength(breakLength - 1);
     } else if (type === "session" && sessionLength > 1) {
       setSessionLength(sessionLength - 1);
-      setTimeLeft(`${sessionLength}:00`);
+      setTimeLeft(`${sessionLength - 1}:00`);
     }
   };
 
@@ -87,7 +93,7 @@ function App() {
             -
           </button>
           <span id="break-length">{breakLength}</span>
-          <button id="break-increment"onClick={() => increment("break")}>
+          <button id="break-increment" onClick={() => increment("break")}>
             +
           </button>
         </div>
@@ -109,10 +115,18 @@ function App() {
       <div id="timer">
         <h2 id="timer-label">Session</h2>
         <div id="time-left">{timeLeft}</div>
+        <audio
+          id="beep"
+          ref={beepRef}
+          src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
+          preload="auto"
+        ></audio>
       </div>
 
       <div id="controls">
-        <button id="start-stop" onClick={startStopTimer}>{isRunning ? 'Stop' : 'Start'}</button>
+        <button id="start-stop" onClick={startStopTimer}>
+          {isRunning ? "Stop" : "Start"}
+        </button>
         <button id="reset" onClick={resetTimer}>
           Reset
         </button>
