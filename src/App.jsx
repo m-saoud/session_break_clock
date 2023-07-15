@@ -49,24 +49,21 @@ function App() {
     setIsRunning(false);
 
   };
-  const decrementBreakLength = () => {
-    if (breakLength > 1) {
+  const decrement = (type) => {
+    if (type === "break" && breakLength > 1) {
       setBreakLength(breakLength - 1);
-    }
-  };
-  const incrementBreakLength = () => {
-    if (breakLength < 60) {
-      setBreakLength(breakLength + 1);
-    }
-  };
-  const decrementSessionLength = () => {
-    if (sessionLength > 1) {
+    } else if (type === "session" && sessionLength > 1) {
       setSessionLength(sessionLength - 1);
+      setTimeLeft(`${sessionLength}:00`);
     }
   };
-  const incrementSessionLength = () => {
-    if (sessionLength < 60) {
+
+  const increment = (type) => {
+    if (type === "break" && breakLength < 60) {
+      setBreakLength(breakLength + 1);
+    } else if (type === "session" && sessionLength < 60) {
       setSessionLength(sessionLength + 1);
+      setTimeLeft(`${sessionLength + 1}:00`);
     }
   };
 
@@ -77,11 +74,11 @@ function App() {
       <div className="setting">
         <h2 id="break-label">Break Length</h2>
         <div className="controls">
-          <button id="break-decrement" onClick={decrementBreakLength}>
+          <button id="break-decrement" onClick={() => decrement("break")}>
             -
           </button>
           <span id="break-length">{breakLength}</span>
-          <button id="break-increment" onClick={incrementBreakLength}>
+          <button id="break-increment"onClick={() => increment("break")}>
             +
           </button>
         </div>
@@ -90,11 +87,11 @@ function App() {
       <div className="setting">
         <h2 id="session-label">Session Length</h2>
         <div className="controls">
-          <button id="session-decrement" onClick={decrementSessionLength}>
+          <button id="session-decrement" onClick={() => decrement("session")}>
             -
           </button>
           <span id="session-length">{sessionLength}</span>
-          <button id="session-increment" onClick={incrementSessionLength}>
+          <button id="session-increment" onClick={() => increment("session")}>
             +
           </button>
         </div>
@@ -107,7 +104,6 @@ function App() {
 
       <div id="controls">
         <button id="start-stop" onClick={startStopTimer}>{isRunning ? 'Stop' : 'Start'}</button>
-        <button id="pause">Pause</button>
         <button id="reset" onClick={resetTimer}>
           Reset
         </button>
