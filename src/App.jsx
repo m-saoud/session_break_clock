@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./App.css";
 
@@ -6,12 +6,30 @@ function App() {
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
   const [timeLeft, setTimeLeft] = useState(`${sessionLength}:00`);
+  const [isRunning, setIsRunning] = useState(false);
 
+  useEffect(() => {
+    let timerInterval;
+    if (isRunning) {
+      timerInterval = setInterval(() => {
+        // Update the time left logic here
+      }, 1000);
+      return () => {
+        clearInterval(timerInterval);
+      };
+    }
+  });
+  
+  const startStopTimer = () => {
+    setIsRunning(!isRunning);
+  };
 
   const resetTimer = () => {
     setBreakLength(5);
     setSessionLength(25);
     setTimeLeft(`${sessionLength}:00`);
+    setIsRunning(false);
+
   };
   const decrementBreakLength = () => {
     if (breakLength > 1) {
@@ -25,8 +43,7 @@ function App() {
   };
   const decrementSessionLength = () => {
     if (sessionLength > 1) {
-      setSessionLength(sessionLength - 1)
-    
+      setSessionLength(sessionLength - 1);
     }
   };
   const incrementSessionLength = () => {
@@ -46,28 +63,36 @@ function App() {
             -
           </button>
           <span id="break-length">{breakLength}</span>
-          <button id="break-increment" onClick={incrementBreakLength}>+</button>
+          <button id="break-increment" onClick={incrementBreakLength}>
+            +
+          </button>
         </div>
       </div>
 
       <div className="setting">
         <h2 id="session-label">Session Length</h2>
         <div className="controls">
-          <button id="session-decrement" onClick={decrementSessionLength}>-</button>
+          <button id="session-decrement" onClick={decrementSessionLength}>
+            -
+          </button>
           <span id="session-length">{sessionLength}</span>
-          <button id="session-increment" onClick={incrementSessionLength}>+</button>
+          <button id="session-increment" onClick={incrementSessionLength}>
+            +
+          </button>
         </div>
       </div>
 
       <div id="timer">
         <h2 id="timer-label">Session</h2>
-        <div id="time-left">25:00</div>
+        <div id="time-left">{timeLeft}</div>
       </div>
 
       <div id="controls">
-        <button id="start-stop">Start</button>
+        <button id="start-stop" onClick={startStopTimer}>{isRunning ? 'Stop' : 'Start'}</button>
         <button id="pause">Pause</button>
-        <button id="reset" onClick={resetTimer}>Reset</button>
+        <button id="reset" onClick={resetTimer}>
+          Reset
+        </button>
       </div>
     </div>
   );
