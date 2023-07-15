@@ -7,6 +7,8 @@ function App() {
   const [sessionLength, setSessionLength] = useState(25);
   const [timeLeft, setTimeLeft] = useState(`${sessionLength}:00`);
   const [isRunning, setIsRunning] = useState(false);
+  const [timerLabel, setTimerLabel] = useState("Session");
+
   useEffect(() => {
     let timerInterval;
 
@@ -27,6 +29,13 @@ function App() {
         } else {
           clearInterval(timerInterval);
           // Handle timer completion logic here
+          if (timerLabel === "Session") {
+            setTimerLabel("Break");
+            setTimeLeft(`${breakLength}:00`);
+          } else {
+            setTimerLabel("Session");
+            setTimeLeft(`${sessionLength}:00`);
+          }
         }
       }, 1000);
     } else {
@@ -36,7 +45,7 @@ function App() {
     return () => {
       clearInterval(timerInterval);
     };
-  }, [isRunning, timeLeft]);
+  }, [isRunning, timeLeft, breakLength, sessionLength, timerLabel]);
   
   const startStopTimer = () => {
     setIsRunning(!isRunning);
