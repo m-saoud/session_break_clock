@@ -7,18 +7,36 @@ function App() {
   const [sessionLength, setSessionLength] = useState(25);
   const [timeLeft, setTimeLeft] = useState(`${sessionLength}:00`);
   const [isRunning, setIsRunning] = useState(false);
-
   useEffect(() => {
     let timerInterval;
+
     if (isRunning) {
       timerInterval = setInterval(() => {
-        // Update the time left logic here
+        const [minutes, seconds] = timeLeft.split(":");
+        let totalSeconds = parseInt(minutes) * 60 + parseInt(seconds);
+
+        if (totalSeconds > 0) {
+          totalSeconds--;
+          const newMinutes = Math.floor(totalSeconds / 60);
+          const newSeconds = totalSeconds % 60;
+          setTimeLeft(
+            `${newMinutes.toString().padStart(2, "0")}:${newSeconds
+              .toString()
+              .padStart(2, "0")}`
+          );
+        } else {
+          clearInterval(timerInterval);
+          // Handle timer completion logic here
+        }
       }, 1000);
-      return () => {
-        clearInterval(timerInterval);
-      };
+    } else {
+      clearInterval(timerInterval);
     }
-  });
+
+    return () => {
+      clearInterval(timerInterval);
+    };
+  }, [isRunning, timeLeft]);
   
   const startStopTimer = () => {
     setIsRunning(!isRunning);
