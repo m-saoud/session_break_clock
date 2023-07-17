@@ -10,7 +10,6 @@ function App() {
   const [timerLabel, setTimerLabel] = useState("Session");
   const beepRef = useRef(null);
 
-
   useEffect(() => {
     let timerInterval;
 
@@ -39,10 +38,8 @@ function App() {
             setTimeLeft(`${sessionLength}:00`);
           }
           beepRef.current.play();
-
         }
       }, 1000);
-
     } else {
       clearInterval(timerInterval);
     }
@@ -81,7 +78,11 @@ function App() {
       setTimeLeft(`${sessionLength + 1}:00`);
     }
   };
-  const timerClassName = parseInt(timeLeft.split(":")[0]) === 0 && parseInt(timeLeft.split(":")[1]) < 60 ? "last-minute" : "";
+  const timerClassName =
+    parseInt(timeLeft.split(":")[0]) === 0 &&
+    parseInt(timeLeft.split(":")[1]) < 60
+      ? "last-minute"
+      : "";
 
   return (
     <div>
@@ -115,7 +116,9 @@ function App() {
 
       <div id="timer">
         <h2 id="timer-label">Session</h2>
-        <div id="time-left" className={timerClassName}>{timeLeft}</div>
+        <div id="time-left" className={timerClassName}>
+          {timeLeft}
+        </div>
         <audio
           id="beep"
           ref={beepRef}
