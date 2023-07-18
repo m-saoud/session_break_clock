@@ -29,7 +29,8 @@ function App() {
           );
         } else {
           clearInterval(timerInterval);
-          // Handle timer completion logic here
+
+
           if (timerLabel === "Session") {
             setTimerLabel("Break");
             setTimeLeft(`${breakLength}:00`);
@@ -40,6 +41,9 @@ function App() {
           beepRef.current.play();
         }
       }, 1000);
+
+
+      
     } else {
       clearInterval(timerInterval);
     }
