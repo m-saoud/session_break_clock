@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import RestControl from "./components/rest";
 
 import "./App.css";
 
@@ -30,7 +31,6 @@ function App() {
         } else {
           clearInterval(timerInterval);
 
-
           if (timerLabel === "Session") {
             setTimerLabel("Break");
             setTimeLeft(`${breakLength}:00`);
@@ -40,10 +40,7 @@ function App() {
           }
           beepRef.current.play();
         }
-      }, 1000);
-
-
-      
+      }, 200);
     } else {
       clearInterval(timerInterval);
     }
@@ -57,7 +54,7 @@ function App() {
     setIsRunning(!isRunning);
   };
 
-  const resetTimer = () => {
+  const resetTimer1 = () => {
     setBreakLength(5);
     setSessionLength(25);
     setTimeLeft(`${sessionLength}:00`);
@@ -65,6 +62,7 @@ function App() {
     beepRef.current.pause();
     beepRef.current.currentTime = 0;
   };
+
   const decrement = (type) => {
     if (type === "break" && breakLength > 1) {
       setBreakLength(breakLength - 1);
@@ -135,9 +133,7 @@ function App() {
         <button id="start-stop" onClick={startStopTimer}>
           {isRunning ? "Stop" : "Start"}
         </button>
-        <button id="reset" onClick={resetTimer}>
-          Reset
-        </button>
+        <RestControl resetTimer2={resetTimer1}/>
       </div>
     </div>
   );
